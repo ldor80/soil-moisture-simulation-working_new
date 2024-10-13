@@ -13,7 +13,7 @@ interface SettingsContextType {
   setDisplayValuesInCells: (displayValuesInCells: boolean) => void;
 }
 
-const SettingsContext = createContext<SettingsContextType | null>(null);
+const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [colorScheme, setColorScheme] = useState<'default' | 'blue' | 'grayscale'>('default');
@@ -22,16 +22,18 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [displayValuesInCells, setDisplayValuesInCells] = useState(false);
 
   return (
-    <SettingsContext.Provider value={{
-      colorScheme,
-      setColorScheme,
-      units,
-      setUnits,
-      moistureUnit,
-      setMoistureUnit,
-      displayValuesInCells,
-      setDisplayValuesInCells
-    }}>
+    <SettingsContext.Provider
+      value={{
+        colorScheme,
+        setColorScheme,
+        units,
+        setUnits,
+        moistureUnit,
+        setMoistureUnit,
+        displayValuesInCells,
+        setDisplayValuesInCells,
+      }}
+    >
       {children}
     </SettingsContext.Provider>
   );
@@ -39,7 +41,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
 
 export const useSettings = () => {
   const context = useContext(SettingsContext);
-  if (context === null) {
+  if (context === undefined) {
     throw new Error('useSettings must be used within a SettingsProvider');
   }
   return context;
