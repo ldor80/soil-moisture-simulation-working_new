@@ -1,25 +1,29 @@
-"use client";
+'use client'
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react'
+
+type MoistureUnit = 'percentage' | 'volumetric'
+type ColorScheme = 'default' | 'blue' | 'grayscale'
+type Units = 'metric' | 'imperial'
 
 interface SettingsContextType {
-  colorScheme: 'default' | 'blue' | 'grayscale';
-  setColorScheme: (colorScheme: 'default' | 'blue' | 'grayscale') => void;
-  units: 'metric' | 'imperial';
-  setUnits: (units: 'metric' | 'imperial') => void;
-  moistureUnit: 'percentage' | 'volumetric';
-  setMoistureUnit: (moistureUnit: 'percentage' | 'volumetric') => void;
-  displayValuesInCells: boolean;
-  setDisplayValuesInCells: (displayValuesInCells: boolean) => void;
+  colorScheme: ColorScheme
+  setColorScheme: (colorScheme: ColorScheme) => void
+  units: Units
+  setUnits: (units: Units) => void
+  moistureUnit: MoistureUnit
+  setMoistureUnit: (moistureUnit: MoistureUnit) => void
+  displayValuesInCells: boolean
+  setDisplayValuesInCells: (displayValuesInCells: boolean) => void
 }
 
-const SettingsContext = createContext<SettingsContextType | null>(null);
+const SettingsContext = createContext<SettingsContextType | null>(null)
 
 export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [colorScheme, setColorScheme] = useState<'default' | 'blue' | 'grayscale'>('default');
-  const [units, setUnits] = useState<'metric' | 'imperial'>('metric');
-  const [moistureUnit, setMoistureUnit] = useState<'percentage' | 'volumetric'>('percentage');
-  const [displayValuesInCells, setDisplayValuesInCells] = useState(false);
+  const [colorScheme, setColorScheme] = useState<ColorScheme>('default')
+  const [units, setUnits] = useState<Units>('metric')
+  const [moistureUnit, setMoistureUnit] = useState<MoistureUnit>('percentage')
+  const [displayValuesInCells, setDisplayValuesInCells] = useState(false)
 
   return (
     <SettingsContext.Provider
@@ -36,15 +40,13 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     >
       {children}
     </SettingsContext.Provider>
-  );
-};
+  )
+}
 
 export const useSettings = () => {
-  const context = useContext(SettingsContext);
+  const context = useContext(SettingsContext)
   if (!context) {
-    throw new Error('useSettings must be used within a SettingsProvider');
+    throw new Error('useSettings must be used within a SettingsProvider')
   }
-  return context;
-};
-
-export default SettingsContext;
+  return context
+}

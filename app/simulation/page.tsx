@@ -11,11 +11,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer } from 'recharts'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Info, X } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import 'katex/dist/katex.min.css'
 import dynamic from 'next/dynamic'
+import { useSettings } from '@/contexts/SettingsContext'
 
 const BlockMath = dynamic(() => import('react-katex').then((mod) => mod.BlockMath), { ssr: false })
 
@@ -66,6 +66,7 @@ const parameterFormulas: { [key in keyof SimulationParams]: string } = {
 
 export default function Simulation() {
   const searchParams = useSearchParams()
+  const { units, setUnits, moistureUnit, setMoistureUnit, colorScheme, setColorScheme, displayValuesInCells, setDisplayValuesInCells } = useSettings()
   const [grid, setGrid] = useState<Cell[][]>([])
   const [isRunning, setIsRunning] = useState(false)
   const [timeStep, setTimeStep] = useState(0)
@@ -78,10 +79,6 @@ export default function Simulation() {
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null)
   const [moistureHistory, setMoistureHistory] = useState<{ time: number; moisture: number }[]>([])
   const [showCellDetails, setShowCellDetails] = useState(false)
-  const [displayValuesInCells, setDisplayValuesInCells] = useState(false)
-  const [colorScheme, setColorScheme] = useState('default')
-  const [units, setUnits] = useState('metric')
-  const [moistureUnit, setMoistureUnit] = useState<'percentage' | 'volumetric'>('percentage')
   const [timeStepSize, setTimeStepSize] = useState(1) // Default to 1 hour
   const [openInfoPanel, setOpenInfoPanel] = useState<keyof SimulationParams | null>(null)
 
@@ -324,6 +321,7 @@ export default function Simulation() {
         ) : (
           <p>Loading grid...</p>
         )}
+        
         {ColorLegend}
       </div>
       <div>
@@ -372,7 +370,7 @@ export default function Simulation() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="colorScheme">Color Scheme</Label>
-            <Select value={colorScheme} onValueChange={setColorScheme}>
+            <Select value={colorScheme} onValueChange={(value: 'default' | 'blue' | 'grayscale') => setColorScheme(value)}>
               <SelectTrigger id="colorScheme">
                 <SelectValue placeholder="Select color scheme" />
               </SelectTrigger>
@@ -386,7 +384,7 @@ export default function Simulation() {
           <div className="space-y-2">
             <Label htmlFor="units">Units</Label>
             <div className="flex items-center space-x-2">
-              <Select value={units} onValueChange={setUnits}>
+              <Select value={units} onValueChange={(value: 'metric' | 'imperial') => setUnits(value)}>
                 <SelectTrigger id="units">
                   <SelectValue placeholder="Select units" />
                 </SelectTrigger>
@@ -412,7 +410,10 @@ export default function Simulation() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="moistureUnit">Moisture Unit</Label>
-            <Select value={moistureUnit} onValueChange={setMoistureUnit}>
+            <Select
+              value={moistureUnit}
+              onValueChange={(value: 'percentage' | 'volumetric') => setMoistureUnit(value)}
+            >
               <SelectTrigger id="moistureUnit">
                 <SelectValue placeholder="Select moisture unit" />
               </SelectTrigger>
