@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -64,7 +64,7 @@ const parameterFormulas: { [key in keyof SimulationParams]: string } = {
   moistureThreshold: '', // No formula for this parameter
 }
 
-export default function Simulation() {
+function SimulationContent() {
   const searchParams = useSearchParams()
   const { units, setUnits, moistureUnit, setMoistureUnit, colorScheme, setColorScheme, displayValuesInCells, setDisplayValuesInCells } = useSettings()
   const [grid, setGrid] = useState<Cell[][]>([])
@@ -546,5 +546,13 @@ export default function Simulation() {
         </DialogContent>
       </Dialog>
     </div>
+  )
+}
+
+export default function Simulation() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SimulationContent />
+    </Suspense>
   )
 }
