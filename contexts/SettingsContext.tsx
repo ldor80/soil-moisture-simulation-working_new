@@ -44,3 +44,5 @@ export const useSettings = () => {
   }
   return context;
 };
+
+export default SettingsContext;

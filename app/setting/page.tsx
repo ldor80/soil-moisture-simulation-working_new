@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import SettingsContext from '@/contexts/SettingsContext'
+import { SettingsContext } from '@/contexts/SettingsContext'
 
 export default function SettingsPage() {
   const { units, setUnits, moistureUnit, setMoistureUnit } = useContext(SettingsContext)
